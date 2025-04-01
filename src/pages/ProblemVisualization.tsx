@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -174,91 +175,93 @@ const ProblemVisualization = () => {
         </div>
       </header>
       
-      <TabsList className="grid w-full grid-cols-3 my-2">
-        <TabsTrigger value="statement" onClick={() => setActiveTab("statement")}>
-          <BookOpen className="h-4 w-4 mr-1" />
-          Problem
-        </TabsTrigger>
-        <TabsTrigger value="visualization" onClick={() => setActiveTab("visualization")}>
-          <Info className="h-4 w-4 mr-1" />
-          Visual
-        </TabsTrigger>
-        <TabsTrigger value="code" onClick={() => setActiveTab("code")}>
-          <Code className="h-4 w-4 mr-1" />
-          Code Flow
-        </TabsTrigger>
-      </TabsList>
-      
-      <div className="flex-grow overflow-hidden p-2">
-        {activeTab === "statement" && (
-          <ProblemStatement problem={problem} />
-        )}
+      <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3 my-2">
+          <TabsTrigger value="statement">
+            <BookOpen className="h-4 w-4 mr-1" />
+            Problem
+          </TabsTrigger>
+          <TabsTrigger value="visualization">
+            <Info className="h-4 w-4 mr-1" />
+            Visual
+          </TabsTrigger>
+          <TabsTrigger value="code">
+            <Code className="h-4 w-4 mr-1" />
+            Code Flow
+          </TabsTrigger>
+        </TabsList>
         
-        {activeTab === "visualization" && (
-          <div className="h-full flex flex-col">
-            <div className="mb-4 p-2 bg-muted/30 rounded-lg">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-sm font-medium">Visualization Controls</h3>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleStepBackward}
-                    disabled={currentStep === 0}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handlePlayPause}
-                  >
-                    {isPlaying ? "Pause" : "Play"}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleStepForward}
-                    disabled={currentStep === executionSteps.length - 1}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
+        <div className="flex-grow overflow-hidden p-2">
+          <TabsContent value="statement" className="h-full">
+            <ProblemStatement problem={problem} />
+          </TabsContent>
+          
+          <TabsContent value="visualization" className="h-full">
+            <div className="h-full flex flex-col">
+              <div className="mb-4 p-2 bg-muted/30 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-sm font-medium">Visualization Controls</h3>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleStepBackward}
+                      disabled={currentStep === 0}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handlePlayPause}
+                    >
+                      {isPlaying ? "Pause" : "Play"}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleStepForward}
+                      disabled={currentStep === executionSteps.length - 1}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs">Slow</span>
+                  <Slider
+                    value={[visualizationSpeed]}
+                    min={1}
+                    max={100}
+                    step={1}
+                    onValueChange={(values) => setVisualizationSpeed(values[0])}
+                    className="flex-grow"
+                  />
+                  <span className="text-xs">Fast</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs">Slow</span>
-                <Slider
-                  value={[visualizationSpeed]}
-                  min={1}
-                  max={100}
-                  step={1}
-                  onValueChange={(values) => setVisualizationSpeed(values[0])}
-                  className="flex-grow"
+              
+              <div className="flex-grow overflow-hidden">
+                <AlgorithmVisualizer 
+                  step={executionSteps[currentStep]?.visualization || {}} 
+                  description={executionSteps[currentStep]?.description || ""}
                 />
-                <span className="text-xs">Fast</span>
               </div>
             </div>
-            
-            <div className="flex-grow overflow-hidden">
-              <AlgorithmVisualizer 
-                step={executionSteps[currentStep]?.visualization || {}} 
-                description={executionSteps[currentStep]?.description || ""}
+          </TabsContent>
+          
+          <TabsContent value="code" className="h-full">
+            <div className="h-full overflow-auto">
+              <CodeExecutionFlow 
+                steps={executionSteps} 
+                currentStep={currentStep}
+                inputValues={inputValues}
+                onInputChange={handleInputChange}
               />
             </div>
-          </div>
-        )}
-        
-        {activeTab === "code" && (
-          <div className="h-full overflow-auto">
-            <CodeExecutionFlow 
-              steps={executionSteps} 
-              currentStep={currentStep}
-              inputValues={inputValues}
-              onInputChange={handleInputChange}
-            />
-          </div>
-        )}
-      </div>
+          </TabsContent>
+        </div>
+      </Tabs>
       
       <div className="p-2 border-t">
         <Button 
@@ -396,3 +399,4 @@ const ProblemVisualization = () => {
 };
 
 export default ProblemVisualization;
+
