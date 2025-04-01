@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Problems from "./pages/Problems";
 import Subscription from "./pages/Subscription";
 import CodeEditor from "./pages/CodeEditor";
+import ProblemVisualization from "./pages/ProblemVisualization";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/problems" element={<Problems />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/editor/:problemId" element={<CodeEditor />} />
+          <Route path="/problem/:problemId" element={<ProblemVisualization />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
