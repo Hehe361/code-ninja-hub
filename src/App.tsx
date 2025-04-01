@@ -11,6 +11,8 @@ import Subscription from "./pages/Subscription";
 import CodeEditor from "./pages/CodeEditor";
 import ProblemVisualization from "./pages/ProblemVisualization";
 import NotFound from "./pages/NotFound";
+import SubmissionHistory from "./pages/SubmissionHistory";
+import Certifications from "./pages/Certifications";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,8 @@ const App = () => (
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/editor/:problemId" element={<CodeEditor />} />
           <Route path="/problem/:problemId" element={<ProblemVisualization />} />
+          <Route path="/submissions" element={<SubmissionHistory />} />
+          <Route path="/certifications" element={<Certifications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
