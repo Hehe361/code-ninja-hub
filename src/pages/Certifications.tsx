@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Award, Badge as BadgeIcon, Scroll, Download, Share2, Star, Trophy, Linkedin, Github } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import DarkModeToggle from '@/components/DarkModeToggle';
+import BlurImage from '@/components/ui/BlurImage';
 
 // Mock achievement data
 const mockCertificates = [
@@ -119,8 +120,13 @@ const Certifications = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto pt-20 px-4">
+      <main className="container mx-auto pt-16 px-4 pb-20">
         <div className="flex flex-col space-y-8">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Your Achievements</h1>
+            <DarkModeToggle className="ml-4" />
+          </div>
+          
           {/* User Progress Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Card className="bg-gradient-to-br from-primary/90 to-primary/70 text-primary-foreground">
@@ -212,15 +218,15 @@ const Certifications = () => {
                 {/* Certificate Preview */}
                 <div className="lg:w-3/5">
                   <h2 className="text-2xl font-bold mb-4">Certificate Preview</h2>
-                  <Card>
+                  <Card className="overflow-hidden">
                     <CardContent className="p-6">
                       {currentCertificate && (
                         <div className="flex flex-col items-center">
-                          <div className="overflow-hidden rounded-lg border mb-4 w-full">
-                            <img 
+                          <div className="overflow-hidden rounded-lg border mb-4 w-full h-64 md:h-80">
+                            <BlurImage 
                               src={currentCertificate.imageUrl} 
                               alt={currentCertificate.title} 
-                              className="w-full h-auto object-cover"
+                              className="w-full h-full object-cover"
                             />
                           </div>
                           <h3 className="text-xl font-bold mt-2">{currentCertificate.title}</h3>
@@ -229,7 +235,7 @@ const Certifications = () => {
                             Earned on {new Date(currentCertificate.earnedDate).toLocaleDateString()}
                           </p>
                           
-                          <div className="flex flex-wrap gap-2 mt-6">
+                          <div className="flex flex-wrap justify-center gap-2 mt-6">
                             <Button onClick={() => handleDownload(currentCertificate.id)}>
                               <Download className="mr-2 h-4 w-4" />
                               Download Certificate
