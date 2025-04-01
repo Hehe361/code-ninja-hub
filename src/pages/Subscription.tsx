@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -9,11 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Check, Info, CreditCard, PaypalLogo, Shield, Star } from "lucide-react";
+import { Check, Info, CreditCard, CreditCardIcon, Shield, Star } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import DarkModeToggle from "@/components/DarkModeToggle";
 
-// Plan types and data
 interface Feature {
   title: string;
   included: boolean;
@@ -100,17 +98,15 @@ const Subscription = () => {
   const [paymentMethod, setPaymentMethod] = useState<"card" | "paypal">("card");
   const [isProcessing, setIsProcessing] = useState(false);
   
-  // Sample user subscription state (in a real app, this would come from your backend)
   const [userSubscription] = useState({
     plan: "free",
-    renewalDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+    renewalDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
   const handlePaymentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
 
-    // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
       toast({
@@ -130,7 +126,6 @@ const Subscription = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold">
@@ -156,7 +151,6 @@ const Subscription = () => {
             </p>
           </div>
 
-          {/* Current subscription notice if applicable */}
           {userSubscription.plan !== "free" && (
             <Card className="mb-8 border-primary/20 bg-primary/5">
               <CardContent className="pt-6">
@@ -173,7 +167,6 @@ const Subscription = () => {
             </Card>
           )}
 
-          {/* Billing toggle */}
           <div className="flex justify-center mb-8">
             <div className="inline-flex items-center p-1 bg-muted rounded-lg">
               <button
@@ -198,7 +191,6 @@ const Subscription = () => {
             </div>
           </div>
 
-          {/* Pricing table */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {plans.map((plan) => (
               <Card 
@@ -282,7 +274,6 @@ const Subscription = () => {
             ))}
           </div>
 
-          {/* Payment section */}
           {selectedPlan !== "free" && (
             <Card className="mb-8">
               <CardHeader>
@@ -299,7 +290,7 @@ const Subscription = () => {
                       Credit Card
                     </TabsTrigger>
                     <TabsTrigger value="paypal" className="flex items-center gap-2">
-                      <PaypalLogo className="h-4 w-4" />
+                      <CreditCardIcon className="h-4 w-4" />
                       PayPal
                     </TabsTrigger>
                   </TabsList>
@@ -377,7 +368,6 @@ const Subscription = () => {
             </Card>
           )}
 
-          {/* FAQ Section */}
           <div className="max-w-3xl mx-auto mt-16">
             <h2 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
             <div className="space-y-4">
