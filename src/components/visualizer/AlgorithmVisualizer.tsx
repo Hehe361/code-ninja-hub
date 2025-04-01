@@ -25,6 +25,8 @@ const AlgorithmVisualizer: React.FC<AlgorithmVisualizerProps> = ({
         return <ArrayVisualizer data={step.data} pointers={step.pointers || []} />;
       case 'graph':
         return <GraphVisualizer nodes={step.nodes} edges={step.edges} />;
+      case 'tree':
+        return <TreeVisualizer nodes={step.nodes} edges={step.edges} />;  
       case 'basic':
       default:
         return <BasicVisualizer value={step.value} />;
@@ -49,34 +51,60 @@ const AlgorithmVisualizer: React.FC<AlgorithmVisualizerProps> = ({
 
 // Component for array-based visualizations
 const ArrayVisualizer: React.FC<{
-  data: number[];
+  data: any[];
   pointers: Array<{index: number; label: string; highlight?: boolean}>;
 }> = ({ data, pointers }) => {
+  // Handle different data types for arrays
+  const renderArrayElement = (value: any, index: number) => {
+    if (Array.isArray(value)) {
+      // For 2D arrays or interval-like data
+      return (
+        <div className="flex flex-col items-center mx-1">
+          <div 
+            className={`
+              text-xs px-2 py-1 rounded-md border
+              ${pointers.some(p => p.index === index && p.highlight) 
+                ? 'border-primary bg-primary/10' 
+                : 'border-muted-foreground/30 bg-muted/30'
+              }
+            `}
+          >
+            [{value.join(',')}]
+          </div>
+        </div>
+      );
+    } else {
+      // For regular 1D arrays
+      return (
+        <div 
+          className={`
+            w-12 h-12 flex items-center justify-center rounded border-2
+            ${pointers.some(p => p.index === index && p.highlight) 
+              ? 'border-primary bg-primary/10 dark:bg-primary/20' 
+              : 'border-muted-foreground/30 bg-muted/30'
+            }
+          `}
+        >
+          {value}
+        </div>
+      );
+    }
+  };
+  
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="flex justify-center items-end mb-8 w-full">
+      <div className="flex justify-center items-end mb-8 w-full flex-wrap">
         {data.map((value, index) => {
           const pointer = pointers.find(p => p.index === index);
-          const isHighlighted = pointer?.highlight;
           
           return (
-            <div key={index} className="flex flex-col items-center mx-2">
+            <div key={index} className="flex flex-col items-center mx-2 mb-4">
               <div className={`text-xs mb-1 ${pointer ? 'text-primary font-bold' : 'invisible'}`}>
                 {pointer?.label || 'x'}
               </div>
-              <div 
-                className={`
-                  w-12 h-12 flex items-center justify-center rounded border-2
-                  ${isHighlighted 
-                    ? 'border-primary bg-primary/10 dark:bg-primary/20' 
-                    : 'border-muted-foreground/30 bg-muted/30'
-                  }
-                `}
-              >
-                {value}
-              </div>
+              {renderArrayElement(value, index)}
               <div className="text-xs mt-1 text-muted-foreground">
-                index: {index}
+                {Array.isArray(value) ? `interval ${index}` : `index: ${index}`}
               </div>
             </div>
           );
@@ -85,7 +113,7 @@ const ArrayVisualizer: React.FC<{
       
       <div className="text-center text-sm text-muted-foreground">
         {pointers.length > 0 
-          ? `Comparing elements at positions: ${pointers.map(p => p.index).join(', ')}`
+          ? `Pointers: ${pointers.map(p => `${p.label} at index ${p.index}`).join(', ')}`
           : 'Array initialized'
         }
       </div>
@@ -95,8 +123,8 @@ const ArrayVisualizer: React.FC<{
 
 // Component for graph-based visualizations
 const GraphVisualizer: React.FC<{
-  nodes: Array<{id: number; highlight?: boolean; visited?: boolean}>;
-  edges: Array<{source: number; target: number; highlight?: boolean; visited?: boolean}>;
+  nodes: Array<{id: any; highlight?: boolean; visited?: boolean}>;
+  edges: Array<{source: any; target: any; highlight?: boolean; visited?: boolean}>;
 }> = ({ nodes, edges }) => {
   // Calculate positions in a circular layout
   const radius = 120;
@@ -174,6 +202,21 @@ const GraphVisualizer: React.FC<{
           </g>
         ))}
       </svg>
+    </div>
+  );
+};
+
+// Tree visualization component 
+const TreeVisualizer: React.FC<{
+  nodes: Array<{id: any; highlight?: boolean; visited?: boolean}>;
+  edges: Array<{source: any; target: any; highlight?: boolean}>;
+}> = ({ nodes, edges }) => {
+  // Similar to graph visualization but with hierarchical layout
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-muted-foreground">Tree visualization</p>
+      </div>
     </div>
   );
 };

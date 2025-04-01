@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { Play, Bug, Save, RotateCcw, ChevronRight, ChevronLeft, ArrowLeft } from "lucide-react";
+import { Play, Bug, Save, RotateCcw, ChevronRight, ChevronLeft, ArrowLeft, Eye } from "lucide-react";
 import Editor from "@/components/Editor";
 import TestCases from "@/components/TestCases";
 import ProblemDescription from "@/components/ProblemDescription";
@@ -15,14 +14,12 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-// Define a simple problem lookup object to simulate fetching problem details
 const problemTitles: Record<string, string> = {
   "two-sum": "Two Sum",
   "add-two-numbers": "Add Two Numbers",
   "longest-substring": "Longest Substring Without Repeating Characters"
 };
 
-// Add titles for the problem-X format
 Array(20).fill(null).forEach((_, i) => {
   const index = i + 1;
   const problemType = ['Two Sum', 'Merge Intervals', 'LRU Cache', 'Validate BST', 'Max Path Sum'][i % 5];
@@ -42,7 +39,6 @@ const CodeEditor = () => {
   const [showResults, setShowResults] = useState(false);
   const isMobile = useIsMobile();
 
-  // Set the problem title based on the problemId
   useEffect(() => {
     if (problemId) {
       setProblemTitle(problemTitles[problemId] || `Problem ${problemId}`);
@@ -52,7 +48,6 @@ const CodeEditor = () => {
   const handleRunCode = async () => {
     setIsRunning(true);
     try {
-      // Simulate code execution
       await new Promise(resolve => setTimeout(resolve, 1000));
       setOutput("Code executed successfully!\nExecution time: 0.05s\nMemory used: 5.2MB");
       toast({
@@ -73,7 +68,6 @@ const CodeEditor = () => {
     }
   };
 
-  // Mobile view rendering for the editor and results
   const renderMobileView = () => (
     <div className="h-screen flex flex-col">
       <header className="border-b p-2 flex items-center justify-between">
@@ -93,10 +87,18 @@ const CodeEditor = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[85vw] sm:w-[350px] overflow-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Problem Description</h2>
+                <Link to={`/problem/${problemId}`}>
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Eye className="h-3.5 w-3.5" />
+                    Visualize
+                  </Button>
+                </Link>
+              </div>
               <ProblemDescription problemId={problemId} />
             </SheetContent>
           </Sheet>
-          {/* <ThemeToggle /> */}
           <DarkModeToggle />
           <Button
             variant="default"
@@ -141,7 +143,6 @@ const CodeEditor = () => {
     </div>
   );
 
-  // Desktop view rendering
   const renderDesktopView = () => (
     <div className="h-screen bg-background flex flex-col">
       <header className="border-b p-4 flex items-center justify-between">
@@ -161,7 +162,6 @@ const CodeEditor = () => {
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          {/* <ThemeToggle /> */}
           <DarkModeToggle />
           <Button
             variant="outline"
@@ -208,7 +208,20 @@ const CodeEditor = () => {
           {showProblem && (
             <>
               <ResizablePanel defaultSize={30} minSize={20}>
-                <ProblemDescription problemId={problemId} />
+                <div className="h-full flex flex-col">
+                  <div className="flex justify-between items-center p-4 border-b">
+                    <h2 className="text-lg font-semibold">Problem Description</h2>
+                    <Link to={`/problem/${problemId}`}>
+                      <Button variant="outline" size="sm" className="gap-1">
+                        <Eye className="h-3.5 w-3.5" />
+                        Visualize
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="flex-grow overflow-hidden">
+                    <ProblemDescription problemId={problemId} />
+                  </div>
+                </div>
               </ResizablePanel>
               <ResizableHandle withHandle />
             </>

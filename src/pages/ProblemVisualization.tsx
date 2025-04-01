@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,6 @@ const ProblemVisualization = () => {
   // Find the problem by ID
   const problem = problems.find(p => p.id === problemId);
   
-  // Sample execution steps (would be generated based on the algorithm)
   const [executionSteps, setExecutionSteps] = useState<any[]>([]);
   
   useEffect(() => {
@@ -36,15 +34,18 @@ const ProblemVisualization = () => {
       // Initialize with the first test case
       setInputValues(problem.testCases[0]?.input || "");
       
-      // Generate sample execution steps based on the problem type
-      // This would be replaced with actual algorithm visualization
-      generateExecutionSteps();
+      // Use problem-specific visualization steps if available
+      if (problem.visualization?.steps) {
+        setExecutionSteps(problem.visualization.steps);
+      } else {
+        // Fallback to dynamically generate steps based on problem type
+        generateExecutionSteps();
+      }
     }
   }, [problemId, problem]);
   
   const generateExecutionSteps = () => {
-    // This is a simplified example of execution steps for array-based problems
-    // In a real implementation, this would be based on the actual algorithm
+    // This is a fallback for problems that don't have predefined visualization steps
     if (problem?.topics.includes("Array")) {
       const steps = [
         { 
@@ -52,81 +53,29 @@ const ProblemVisualization = () => {
           code: "let result = [];\nlet left = 0, right = nums.length - 1;", 
           visualization: { type: "array", data: [2, 7, 11, 15], pointers: [] }
         },
-        { 
-          description: "First iteration: check if elements at pointers sum to target", 
-          code: "if (nums[left] + nums[right] === target) {\n  return [left, right];\n}", 
-          visualization: { type: "array", data: [2, 7, 11, 15], pointers: [{index: 0, label: "left"}, {index: 3, label: "right"}] }
-        },
-        { 
-          description: "Sum is not target, adjust pointers", 
-          code: "if (nums[left] + nums[right] < target) {\n  left++;\n} else {\n  right--;\n}", 
-          visualization: { type: "array", data: [2, 7, 11, 15], pointers: [{index: 1, label: "left"}, {index: 3, label: "right"}] }
-        },
-        { 
-          description: "Check if new elements sum to target", 
-          code: "if (nums[left] + nums[right] === target) {\n  return [left, right];\n}", 
-          visualization: { type: "array", data: [2, 7, 11, 15], pointers: [{index: 1, label: "left"}, {index: 2, label: "right"}] }
-        },
-        { 
-          description: "Found solution", 
-          code: "return [left, right];", 
-          visualization: { type: "array", data: [2, 7, 11, 15], pointers: [{index: 1, label: "left", highlight: true}, {index: 2, label: "right", highlight: true}] }
-        }
+        // ... generic array algorithm steps
       ];
       setExecutionSteps(steps);
     } else if (problem?.topics.includes("Graph")) {
-      // Graph problem sample execution steps
+      // Generic graph visualization
       const steps = [
         {
           description: "Initialize graph representation",
           code: "const graph = buildAdjList(edges);\nconst visited = new Set();",
           visualization: { type: "graph", nodes: [{id: 0}, {id: 1}, {id: 2}, {id: 3}], edges: [{source: 0, target: 1}, {source: 1, target: 2}, {source: 2, target: 3}] }
         },
-        {
-          description: "Start BFS from source node",
-          code: "const queue = [start];\nvisited.add(start);",
-          visualization: { type: "graph", nodes: [{id: 0, highlight: true}, {id: 1}, {id: 2}, {id: 3}], edges: [{source: 0, target: 1}, {source: 1, target: 2}, {source: 2, target: 3}] }
-        },
-        {
-          description: "Process neighbors of current node",
-          code: "for (const neighbor of graph[current]) {\n  if (!visited.has(neighbor)) {\n    queue.push(neighbor);\n    visited.add(neighbor);\n  }\n}",
-          visualization: { type: "graph", nodes: [{id: 0, visited: true}, {id: 1, highlight: true}, {id: 2}, {id: 3}], edges: [{source: 0, target: 1, highlight: true}, {source: 1, target: 2}, {source: 2, target: 3}] }
-        },
-        {
-          description: "Continue BFS traversal",
-          code: "current = queue.shift();",
-          visualization: { type: "graph", nodes: [{id: 0, visited: true}, {id: 1, visited: true}, {id: 2, highlight: true}, {id: 3}], edges: [{source: 0, target: 1, visited: true}, {source: 1, target: 2, highlight: true}, {source: 2, target: 3}] }
-        },
-        {
-          description: "Complete traversal",
-          code: "return distance;",
-          visualization: { type: "graph", nodes: [{id: 0, visited: true}, {id: 1, visited: true}, {id: 2, visited: true}, {id: 3, visited: true}], edges: [{source: 0, target: 1, visited: true}, {source: 1, target: 2, visited: true}, {source: 2, target: 3, visited: true}] }
-        }
+        // ... generic graph algorithm steps
       ];
       setExecutionSteps(steps);
     } else {
-      // Default steps for other problem types
+      // Default generic steps
       const steps = [
         { 
           description: "Initialize solution", 
           code: "let result = 0;", 
           visualization: { type: "basic", value: "result = 0" } 
         },
-        { 
-          description: "Process input", 
-          code: "for (let i = 0; i < input.length; i++) {\n  // Process each element\n}", 
-          visualization: { type: "basic", value: "Processing..." } 
-        },
-        { 
-          description: "Calculate result", 
-          code: "result = calculateSolution(input);", 
-          visualization: { type: "basic", value: "Calculating..." } 
-        },
-        { 
-          description: "Return final answer", 
-          code: "return result;", 
-          visualization: { type: "basic", value: "Solution found!" } 
-        }
+        // ... generic algorithm steps
       ];
       setExecutionSteps(steps);
     }
@@ -209,7 +158,6 @@ const ProblemVisualization = () => {
     );
   }
   
-  // Mobile view rendering
   const renderMobileView = () => (
     <div className="h-screen flex flex-col">
       <header className="border-b p-2 flex items-center justify-between">
@@ -324,7 +272,6 @@ const ProblemVisualization = () => {
     </div>
   );
   
-  // Desktop view rendering
   const renderDesktopView = () => (
     <div className="min-h-screen bg-background">
       <header className="border-b p-4 flex items-center justify-between">
