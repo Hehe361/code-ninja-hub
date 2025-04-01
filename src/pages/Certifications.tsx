@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Award, Badge as BadgeIcon, Certificate, Download, Share2, Star, Trophy, Linkedin, Github } from 'lucide-react';
+import { Award, Badge as BadgeIcon, Scroll, Download, Share2, Star, Trophy, Linkedin, Github } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // Mock achievement data
@@ -169,7 +169,7 @@ const Certifications = () => {
           <Tabs defaultValue="certificates" className="w-full">
             <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
               <TabsTrigger value="certificates" className="text-lg">
-                <Certificate className="mr-2 h-5 w-5" />
+                <Scroll className="mr-2 h-5 w-5" />
                 Certificates
               </TabsTrigger>
               <TabsTrigger value="badges" className="text-lg">
