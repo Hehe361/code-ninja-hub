@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -103,8 +104,35 @@ const Subscription = () => {
     renewalDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
+  // New state for card number validation
+  const [cardNumberError, setCardNumberError] = useState<string>("");
+  const [cardNumber, setCardNumber] = useState<string>("");
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    // Check if the input contains only numbers
+    if (value === "" || /^\d+$/.test(value)) {
+      setCardNumber(value);
+      setCardNumberError("");
+    } else {
+      setCardNumberError("Only numbers are allowed");
+    }
+  };
+
   const handlePaymentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate card number before proceeding
+    if (cardNumberError) {
+      toast({
+        title: "Validation Error",
+        description: "Please fix the errors before submitting",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsProcessing(true);
 
     setTimeout(() => {
@@ -311,7 +339,13 @@ const Subscription = () => {
                             required
                             minLength={16}
                             maxLength={19}
+                            value={cardNumber}
+                            onChange={handleCardNumberChange}
+                            className={cardNumberError ? "border-destructive" : ""}
                           />
+                          {cardNumberError && (
+                            <p className="text-destructive text-sm mt-1">{cardNumberError}</p>
+                          )}
                         </div>
                         
                         <div className="grid grid-cols-2 gap-4">
@@ -337,7 +371,7 @@ const Subscription = () => {
                         <Button 
                           type="submit" 
                           className="w-full"
-                          disabled={isProcessing}
+                          disabled={isProcessing || !!cardNumberError}
                         >
                           {isProcessing ? "Processing..." : `Subscribe Now - ${formatPrice(plans.find(p => p.id === selectedPlan)?.price[billingCycle] || 0)}`}
                         </Button>
