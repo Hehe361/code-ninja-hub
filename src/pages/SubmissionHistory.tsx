@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -84,8 +83,8 @@ const SubmissionHistory = () => {
   const [compareMode, setCompareMode] = useState(false);
   
   // Filters
-  const [statusFilter, setStatusFilter] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
   const [titleFilter, setTitleFilter] = useState('');
 
   // Apply filters
@@ -93,12 +92,12 @@ const SubmissionHistory = () => {
     let filtered = [...submissions];
     
     // Filter by status
-    if (statusFilter) {
+    if (statusFilter && statusFilter !== 'all') {
       filtered = filtered.filter(sub => sub.status === statusFilter);
     }
     
     // Filter by date
-    if (dateFilter) {
+    if (dateFilter && dateFilter !== 'all') {
       const now = new Date();
       let cutoffDate = new Date();
       
@@ -149,8 +148,8 @@ const SubmissionHistory = () => {
   };
 
   const clearFilters = () => {
-    setStatusFilter('');
-    setDateFilter('');
+    setStatusFilter('all');
+    setDateFilter('all');
     setTitleFilter('');
   };
 

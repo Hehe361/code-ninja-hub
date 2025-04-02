@@ -3,7 +3,7 @@ import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 interface SubmissionFiltersProps {
   statusFilter: string;
@@ -46,7 +46,7 @@ const SubmissionFilters = ({
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Statuses</SelectItem>
+            <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="Accepted">Accepted</SelectItem>
             <SelectItem value="Wrong Answer">Wrong Answer</SelectItem>
             <SelectItem value="Time Limit Exceeded">Time Limit Exceeded</SelectItem>
@@ -61,7 +61,7 @@ const SubmissionFilters = ({
             <SelectValue placeholder="All Time" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Time</SelectItem>
+            <SelectItem value="all">All Time</SelectItem>
             <SelectItem value="today">Today</SelectItem>
             <SelectItem value="week">Past Week</SelectItem>
             <SelectItem value="month">Past Month</SelectItem>
